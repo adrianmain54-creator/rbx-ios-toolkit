@@ -1,0 +1,43 @@
+name: patch-ipa
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag containing Roblox.ipa'
+        required: true
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: download IPA from release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.event.release.tag_name || github.event.inputs.tag }}"
+          echo "tag: $TAG"
+          gh release download "$TAG" --pattern '*.ipa' --dir .
+          ls -la *.ipa
+
+      - name: patch
+        run: |
+          IPA=$(ls *.ipa | head -1)
+          echo "patching: $IPA"
+          python3 patcher/patch_ipa.py "$IPA" Roblox-patched.ipa
+          ls -la Roblox-patched.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Roblox-patched
+          path: Roblox-patched.ipa
+          retention-days: 30
