@@ -1,0 +1,13 @@
+{
+  "DFIntTaskSchedulerTargetFps": "240",
+  "FIntDebugTextureManagerSkipMips": "1",
+  "DFIntTextureQualityOverride": "0",
+  "DFFlagTextureQualityOverrideEnabled": "true",
+  "FFlagDebugSkyGray": "false",
+  "FIntRenderShadowmapBias": "75",
+  "DFIntCullFactorPixelThresholdShadowMapHighQuality": "2147483647",
+  "FIntRenderLocalLightUpdatesMax": "1",
+  "FIntRenderLocalLightUpdatesMin": "1",
+  "DFIntDebugFRMQualityLevelOverride": "1",
+  "FFlagDisablePostFx": "true"
+}
