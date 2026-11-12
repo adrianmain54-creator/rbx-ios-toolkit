@@ -1,21 +1,21 @@
 {
   "DFIntTaskSchedulerTargetFps": "240",
-
-  "FIntRenderLocalLightUpdatesMaxPerFrame": "1",
-  "FIntRenderLocalLightUpdatesMax": "3",
-  "FIntRenderLocalLightUpdatesMin": "1",
-  "FIntRenderLocalLightFadeInMs": "0",
-
-  "DFIntMaxActiveAnimationTracks": "16",
-  "FIntTaskSchedulerAsyncWorkerBudget": "2",
-  "DFIntS2PhysicsSenderRate": "15",
-
+  "FIntDebugTextureManagerSkipMips": "1",
+  "DFIntTextureQualityOverride": "0",
+  "DFFlagTextureQualityOverrideEnabled": "true",
+  "FIntRenderShadowmapBias": "100000",
   "DFIntCullFactorPixelThresholdShadowMapHighQuality": "2147483647",
   "DFIntCullFactorPixelThresholdShadowMapLowQuality": "2147483647",
-  "DFIntRenderClustersMinFarDistance": "1",
-
+  "FIntRenderLocalLightUpdatesMax": "1",
+  "FIntRenderLocalLightUpdatesMin": "1",
+  "FIntRenderLocalLightFadeInMs": "0",
+  "FIntRenderLocalLightUpdatesMaxPerFrame": "1",
+  "DFIntDebugFRMQualityLevelOverride": "1",
+  "FFlagDisablePostFx": "true",
+  "FFlagDisableBloom": "true",
   "FIntFRMMinGrassDistance": "0",
   "FIntFRMMaxGrassDistance": "0",
-
-  "FFlagDebugSkyGray": "false"
+  "DFIntS2PhysicsSenderRate": "15",
+  "DFIntMaxActiveAnimationTracks": "16",
+  "FIntTaskSchedulerAsyncWorkerBudget": "2"
 }
