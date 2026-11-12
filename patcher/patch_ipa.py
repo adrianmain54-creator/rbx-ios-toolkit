@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-patch_ipa.py — bake fflags into a decrypted Roblox IPA.
+patch_ipa.py — bake fflags into a Roblox IPA.
 Usage: python3 patch_ipa.py <in.ipa> <out.ipa>
 """
 import sys, os, zipfile, tempfile, shutil, plistlib
@@ -26,9 +26,8 @@ def main():
             print(f"[!] {BUNDLE}/Roblox missing"); sys.exit(3)
 
         with open(FFLAGS_SRC, "rb") as f: fb = f.read()
-        plistlib.loads(fb)  # sanity check
+        plistlib.loads(fb)
 
-        # write JSON to both spots — client reads one, we don't know which
         for t in (os.path.join(work, BUNDLE, "ClientAppSettings.json"),
                   os.path.join(work, BUNDLE, "Library", "Application Support",
                                "ClientAppSettings.json")):
