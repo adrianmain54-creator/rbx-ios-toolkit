@@ -16,7 +16,6 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v5
-
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
@@ -25,64 +24,44 @@ jobs:
         id: tag
         run: |
           if [ "${{ github.event_name }}" = "release" ]; then
-            TAG="${{ github.event.release.tag_name }}"
+            echo "value=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
           else
-            TAG="${{ github.event.inputs.tag }}"
+            echo "value=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
           fi
-          if [ -z "$TAG" ]; then
-            echo "ERROR: no tag resolved"; exit 1
-          fi
-          echo "value=$TAG" >> "$GITHUB_OUTPUT"
-          echo "resolved TAG=$TAG"
 
-      - name: list release assets
+      - name: show release assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -e
           gh release view "${{ steps.tag.outputs.value }}" \
             --repo "${{ github.repository }}" \
-            --json tagName,isDraft,assets > /tmp/release.json
-
-          echo "### Release ${{ steps.tag.outputs.value }}" >> "$GITHUB_STEP_SUMMARY"
+            --json tagName,isDraft,assets > /tmp/r.json
+          echo "### Release Assets" >> "$GITHUB_STEP_SUMMARY"
           echo '```json' >> "$GITHUB_STEP_SUMMARY"
-          cat /tmp/release.json >> "$GITHUB_STEP_SUMMARY"
+          cat /tmp/r.json >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
-
-          cat /tmp/release.json
+          cat /tmp/r.json
 
       - name: download IPA
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -euo pipefail
           TAG="${{ steps.tag.outputs.value }}"
-          echo "downloading from tag $TAG"
-
-          # try *.ipa first, then case variants
           if gh release download "$TAG" --repo "${{ github.repository }}" --pattern '*.ipa' --dir . 2>/dev/null; then
             echo "matched *.ipa"
           elif gh release download "$TAG" --repo "${{ github.repository }}" --pattern '*.IPA' --dir . 2>/dev/null; then
             echo "matched *.IPA"
           else
-            echo "no *.ipa / *.IPA asset found"
-            echo "check the release asset list in the step summary above"
+            echo "ERROR: no .ipa asset on release '$TAG' — check Job Summary above"
             exit 1
           fi
-
           ls -lah
-
-          IPA=$(find . -maxdepth 1 -type f \( -name '*.ipa' -o -name '*.IPA' \) | head -1)
-          if [ -z "$IPA" ]; then
-            echo "ERROR: no .ipa file after download"
-            exit 1
-          fi
-          mv "$IPA" input.ipa
-          echo "input: $(ls -lah input.ipa)"
 
       - name: patch
         run: |
-          python3 patcher/patch_ipa.py input.ipa Roblox-patched.ipa
+          IPA_FILE=$(find . -maxdepth 1 -type f \( -name '*.ipa' -o -name '*.IPA' \) | head -1)
+          [ -z "$IPA_FILE" ] && { echo "no IPA file after download"; exit 1; }
+          python3 patcher/patch_ipa.py "$IPA_FILE" Roblox-patched.ipa
           ls -lah Roblox-patched.ipa
 
       - uses: actions/upload-artifact@v4
