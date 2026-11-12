@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Release tag containing Roblox.ipa'
+        description: 'Release tag (e.g. v1)'
         required: true
         default: 'v1'
 
@@ -15,9 +15,9 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
@@ -25,36 +25,65 @@ jobs:
         id: tag
         run: |
           if [ "${{ github.event_name }}" = "release" ]; then
-            echo "value=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+            TAG="${{ github.event.release.tag_name }}"
           else
-            echo "value=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+            TAG="${{ github.event.inputs.tag }}"
           fi
+          if [ -z "$TAG" ]; then
+            echo "ERROR: no tag resolved"; exit 1
+          fi
+          echo "value=$TAG" >> "$GITHUB_OUTPUT"
+          echo "resolved TAG=$TAG"
 
-      - name: list assets on release (debug)
+      - name: list release assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -e
           gh release view "${{ steps.tag.outputs.value }}" \
             --repo "${{ github.repository }}" \
-            --json tagName,assets \
-            --jq '{tag: .tagName, assets: [.assets[].name]}'
+            --json tagName,isDraft,assets > /tmp/release.json
 
-      - name: download IPA from release
+          echo "### Release ${{ steps.tag.outputs.value }}" >> "$GITHUB_STEP_SUMMARY"
+          echo '```json' >> "$GITHUB_STEP_SUMMARY"
+          cat /tmp/release.json >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+          cat /tmp/release.json
+
+      - name: download IPA
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release download "${{ steps.tag.outputs.value }}" \
-            --repo "${{ github.repository }}" \
-            --pattern '*.ipa' \
-            --dir .
-          ls -la *.ipa
+          set -euo pipefail
+          TAG="${{ steps.tag.outputs.value }}"
+          echo "downloading from tag $TAG"
+
+          # try *.ipa first, then case variants
+          if gh release download "$TAG" --repo "${{ github.repository }}" --pattern '*.ipa' --dir . 2>/dev/null; then
+            echo "matched *.ipa"
+          elif gh release download "$TAG" --repo "${{ github.repository }}" --pattern '*.IPA' --dir . 2>/dev/null; then
+            echo "matched *.IPA"
+          else
+            echo "no *.ipa / *.IPA asset found"
+            echo "check the release asset list in the step summary above"
+            exit 1
+          fi
+
+          ls -lah
+
+          IPA=$(find . -maxdepth 1 -type f \( -name '*.ipa' -o -name '*.IPA' \) | head -1)
+          if [ -z "$IPA" ]; then
+            echo "ERROR: no .ipa file after download"
+            exit 1
+          fi
+          mv "$IPA" input.ipa
+          echo "input: $(ls -lah input.ipa)"
 
       - name: patch
         run: |
-          IPA=$(ls *.ipa | head -1)
-          echo "patching: $IPA"
-          python3 patcher/patch_ipa.py "$IPA" Roblox-patched.ipa
-          ls -la Roblox-patched.ipa
+          python3 patcher/patch_ipa.py input.ipa Roblox-patched.ipa
+          ls -lah Roblox-patched.ipa
 
       - uses: actions/upload-artifact@v4
         with:
