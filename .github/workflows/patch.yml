@@ -7,6 +7,7 @@ on:
       tag:
         description: 'Release tag containing Roblox.ipa'
         required: true
+        default: 'v1'
 
 jobs:
   patch:
@@ -20,13 +21,32 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: resolve tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "value=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: list assets on release (debug)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view "${{ steps.tag.outputs.value }}" \
+            --repo "${{ github.repository }}" \
+            --json tagName,assets \
+            --jq '{tag: .tagName, assets: [.assets[].name]}'
+
       - name: download IPA from release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="${{ github.event.release.tag_name || github.event.inputs.tag }}"
-          echo "tag: $TAG"
-          gh release download "$TAG" --pattern '*.ipa' --dir .
+          gh release download "${{ steps.tag.outputs.value }}" \
+            --repo "${{ github.repository }}" \
+            --pattern '*.ipa' \
+            --dir .
           ls -la *.ipa
 
       - name: patch
