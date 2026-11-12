@@ -21,8 +21,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="${{ github.event.release.tag_name || 'v1' }}"
-          echo "downloading tag $TAG"
+          # This automatically finds the latest release tag, whether it's V1, v1, or v2
+          TAG=$(gh release list --repo "${{ github.repository }}" --limit 1 --json tagName --jq '.[0].tagName')
+          echo "Found latest release tag: $TAG"
           gh release download "$TAG" --repo "${{ github.repository }}" --pattern '*.ipa' --dir .
           ls -lah
 
