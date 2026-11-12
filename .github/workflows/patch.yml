@@ -1,71 +1,49 @@
-name: patch-ipa
-on:
-  release:
-    types: [published]
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Release tag (e.g. v1)'
-        required: true
-        default: 'v1'
+#!/usr/bin/env python3
+"""
+patch_ipa.py — bake fflags into a Roblox IPA.
+Usage: python3 patch_ipa.py <in.ipa> <out.ipa>
+"""
+import sys, os, zipfile, tempfile, shutil, json
 
-jobs:
-  patch:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'
+HERE       = os.path.dirname(os.path.abspath(__file__))
+FFLAGS_SRC = os.path.join(HERE, "..", "fflags", "ClientAppSettings.json")
+BUNDLE     = "Payload/Roblox.app"
 
-      - name: resolve tag
-        id: tag
-        run: |
-          if [ "${{ github.event_name }}" = "release" ]; then
-            echo "value=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "value=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
-          fi
+def main():
+    if len(sys.argv) != 3:
+        print(__doc__); sys.exit(1)
+    in_ipa, out_ipa = sys.argv[1], sys.argv[2]
 
-      - name: show release assets
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release view "${{ steps.tag.outputs.value }}" \
-            --repo "${{ github.repository }}" \
-            --json tagName,isDraft,assets > /tmp/r.json
-          echo "### Release Assets" >> "$GITHUB_STEP_SUMMARY"
-          echo '```json' >> "$GITHUB_STEP_SUMMARY"
-          cat /tmp/r.json >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-          cat /tmp/r.json
+    if not os.path.exists(FFLAGS_SRC):
+        print(f"[!] missing {FFLAGS_SRC}"); sys.exit(2)
 
-      - name: download IPA
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          TAG="${{ steps.tag.outputs.value }}"
-          if gh release download "$TAG" --repo "${{ github.repository }}" --pattern '*.ipa' --dir . 2>/dev/null; then
-            echo "matched *.ipa"
-          elif gh release download "$TAG" --repo "${{ github.repository }}" --pattern '*.IPA' --dir . 2>/dev/null; then
-            echo "matched *.IPA"
-          else
-            echo "ERROR: no .ipa asset on release '$TAG' — check Job Summary above"
-            exit 1
-          fi
-          ls -lah
+    work = tempfile.mkdtemp()
+    try:
+        with zipfile.ZipFile(in_ipa) as z: z.extractall(work)
 
-      - name: patch
-        run: |
-          IPA_FILE=$(find . -maxdepth 1 -type f \( -name '*.ipa' -o -name '*.IPA' \) | head -1)
-          [ -z "$IPA_FILE" ] && { echo "no IPA file after download"; exit 1; }
-          python3 patcher/patch_ipa.py "$IPA_FILE" Roblox-patched.ipa
-          ls -lah Roblox-patched.ipa
+        exe = os.path.join(work, BUNDLE, "Roblox")
+        if not os.path.exists(exe):
+            print(f"[!] {BUNDLE}/Roblox missing"); sys.exit(3)
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Roblox-patched
-          path: Roblox-patched.ipa
-          retention-days: 30
+        with open(FFLAGS_SRC, "rb") as f: fb = f.read()
+        json.loads(fb.decode("utf-8"))   # JSON sanity check
+
+        for t in (os.path.join(work, BUNDLE, "ClientAppSettings.json"),
+                  os.path.join(work, BUNDLE, "Library", "Application Support",
+                               "ClientAppSettings.json")):
+            os.makedirs(os.path.dirname(t), exist_ok=True)
+            with open(t, "wb") as f: f.write(fb)
+            print(f"[+] fflags -> {os.path.relpath(t, work)}")
+
+        if os.path.exists(out_ipa): os.remove(out_ipa)
+        with zipfile.ZipFile(out_ipa, "w", zipfile.ZIP_DEFLATED) as z:
+            for root, _, files in os.walk(work):
+                for fn in files:
+                    full = os.path.join(root, fn)
+                    z.write(full, os.path.relpath(full, work))
+        print(f"[✓] {out_ipa}")
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
+
+if __name__ == "__main__":
+    main()
