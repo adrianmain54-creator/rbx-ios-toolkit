@@ -1,49 +1,36 @@
-#!/usr/bin/env python3
-"""
-patch_ipa.py — bake fflags into a Roblox IPA.
-Usage: python3 patch_ipa.py <in.ipa> <out.ipa>
-"""
-import sys, os, zipfile, tempfile, shutil, json
+name: patch-ipa
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
 
-HERE       = os.path.dirname(os.path.abspath(__file__))
-FFLAGS_SRC = os.path.join(HERE, "..", "fflags", "ClientAppSettings.json")
-BUNDLE     = "Payload/Roblox.app"
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
 
-def main():
-    if len(sys.argv) != 3:
-        print(__doc__); sys.exit(1)
-    in_ipa, out_ipa = sys.argv[1], sys.argv[2]
+      - name: download IPA
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.event.release.tag_name || 'v1' }}"
+          echo "downloading tag $TAG"
+          gh release download "$TAG" --repo "${{ github.repository }}" --pattern '*.ipa' --dir .
+          ls -lah
 
-    if not os.path.exists(FFLAGS_SRC):
-        print(f"[!] missing {FFLAGS_SRC}"); sys.exit(2)
+      - name: patch
+        run: |
+          IPA_FILE=$(find . -maxdepth 1 -type f \( -name '*.ipa' -o -name '*.IPA' \) | head -1)
+          python3 patcher/patch_ipa.py "$IPA_FILE" Roblox-patched.ipa
+          ls -lah Roblox-patched.ipa
 
-    work = tempfile.mkdtemp()
-    try:
-        with zipfile.ZipFile(in_ipa) as z: z.extractall(work)
-
-        exe = os.path.join(work, BUNDLE, "Roblox")
-        if not os.path.exists(exe):
-            print(f"[!] {BUNDLE}/Roblox missing"); sys.exit(3)
-
-        with open(FFLAGS_SRC, "rb") as f: fb = f.read()
-        json.loads(fb.decode("utf-8"))   # JSON sanity check
-
-        for t in (os.path.join(work, BUNDLE, "ClientAppSettings.json"),
-                  os.path.join(work, BUNDLE, "Library", "Application Support",
-                               "ClientAppSettings.json")):
-            os.makedirs(os.path.dirname(t), exist_ok=True)
-            with open(t, "wb") as f: f.write(fb)
-            print(f"[+] fflags -> {os.path.relpath(t, work)}")
-
-        if os.path.exists(out_ipa): os.remove(out_ipa)
-        with zipfile.ZipFile(out_ipa, "w", zipfile.ZIP_DEFLATED) as z:
-            for root, _, files in os.walk(work):
-                for fn in files:
-                    full = os.path.join(root, fn)
-                    z.write(full, os.path.relpath(full, work))
-        print(f"[✓] {out_ipa}")
-    finally:
-        shutil.rmtree(work, ignore_errors=True)
-
-if __name__ == "__main__":
-    main()
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Roblox-patched
+          path: Roblox-patched.ipa
