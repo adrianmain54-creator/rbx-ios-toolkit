@@ -5,6 +5,7 @@ on:
     branches: [rivals-boost-ipad]
     paths:
       - "ios/RivalsBoost/**"
+      - "ios/InjectionLab/**"
       - ".github/workflows/rivals-boost-ios.yml"
   pull_request:
     paths:
@@ -17,6 +18,9 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
+      - name: Test dynamic module lab
+        working-directory: ios/InjectionLab
+        run: swift test
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate Xcode project
