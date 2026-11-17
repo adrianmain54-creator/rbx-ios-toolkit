@@ -15,8 +15,7 @@ public enum BoostProbe {
     }
 
     public static func selfTest() -> Bool {
-        !moduleName.isEmpty && Bundle(for: ProbeBundleToken.self).bundleIdentifier != nil
+        diagnostics()["module"] == moduleName &&
+        diagnostics()["platform"] == "iOS"
     }
 }
-
-private final class ProbeBundleToken {}
