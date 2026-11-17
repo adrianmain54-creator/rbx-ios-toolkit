@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 private enum AoidTheme {
     static let background = Color(red: 0.035, green: 0.045, blue: 0.07)
