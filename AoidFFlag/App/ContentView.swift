@@ -63,7 +63,7 @@ struct ContentView: View {
                     .tracking(1)
                     .foregroundStyle(AoidTheme.muted)
             }
-            Text("fFlag Studio")
+            Text("Adrian fflag")
                 .font(.system(size: 34, weight: .bold, design: .rounded))
             Text("VISUAL PROFILES FOR ROBLOX · RIVALS FOCUS")
                 .font(.system(size: 9, weight: .semibold))
