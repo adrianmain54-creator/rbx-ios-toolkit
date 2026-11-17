@@ -21,10 +21,35 @@ enum ShaderLook: String, CaseIterable, Identifiable {
     }
 }
 
+private struct ShaderPresetExport: Codable {
+    let schemaVersion: Int
+    let name: String
+    let intensity: Double
+    let enabled: Bool
+    let description: String
+}
+
 struct ShaderStudioCard: View {
     @State private var look: ShaderLook = .neon
     @State private var intensity = 0.72
     @State private var effectEnabled = true
+
+    private var exportText: String {
+        let preset = ShaderPresetExport(
+            schemaVersion: 1,
+            name: look.rawValue,
+            intensity: intensity,
+            enabled: effectEnabled,
+            description: look.description
+        )
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        guard let data = try? encoder.encode(preset),
+              let text = String(data: data, encoding: .utf8) else {
+            return "{\"error\":\"Could not encode shader preset\"}"
+        }
+        return text
+    }
 
     var body: some View {
         Panel {
@@ -58,7 +83,15 @@ struct ShaderStudioCard: View {
                 }
                 Slider(value: $intensity, in: 0...1).tint(BoostStyle.accent)
             }
-            Text("This is a real SwiftUI/Metal shader effect rendered inside Rivals Boost. It changes this preview only; iPadOS does not let an external app apply it to Roblox Rivals.")
+            ShareLink(item: exportText, subject: Text("Rivals Boost shader preset"), preview: SharePreview("\(look.rawValue) shader preset")) {
+                Label("Export shader preset", systemImage: "square.and.arrow.up")
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 11)
+                    .background(BoostStyle.accent.opacity(0.14), in: RoundedRectangle(cornerRadius: 12))
+            }
+            .tint(BoostStyle.accent)
+            Text("Export creates a shareable JSON preset for Rivals Boost or your own creative tools. The Metal effect runs in this app's preview only; it is not loaded by Roblox Rivals.")
                 .font(.footnote).foregroundStyle(BoostStyle.muted)
         }
     }
