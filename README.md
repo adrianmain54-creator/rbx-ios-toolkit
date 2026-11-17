@@ -1,4 +1,4 @@
-# AoidFFlag
+# Adrian fflag
 
 A native iOS profile manager for Roblox visual preferences, with a Rivals-focused profile, editable visual presets, and JSON export.
 
@@ -14,8 +14,8 @@ This app does **not** inject into Roblox, modify the Roblox app bundle, install 
 Custom skyboxes, texture packs, and shaders require Roblox/game-side support. The Rivals profile is a profile organization feature; it does not alter Rivals itself.
 
 ## Build
-1. Open `AoidFFlag.xcodeproj` in Xcode on macOS.
-2. Select the `AoidFFlag` target.
+1. Open `Adrian fflag.xcodeproj` in Xcode on macOS.
+2. Select the `Adrian fflag` target.
 3. Set your own signing team and bundle identifier.
 4. Build and run on an iPhone or iPad.
 
