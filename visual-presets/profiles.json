@@ -1,0 +1,59 @@
+{
+  "performance": {
+    "description": "Competitive/mobile-friendly look for an experience you own.",
+    "Lighting": {
+      "GlobalShadows": false,
+      "Brightness": 2,
+      "EnvironmentDiffuseScale": 0.5,
+      "EnvironmentSpecularScale": 0
+    },
+    "effects": {
+      "BloomEffect": { "Enabled": false },
+      "SunRaysEffect": { "Enabled": false },
+      "ColorCorrectionEffect": {
+        "Enabled": true,
+        "Brightness": 0,
+        "Contrast": 0.05,
+        "Saturation": 0.05
+      }
+    }
+  },
+  "balanced": {
+    "description": "Moderate atmosphere and color treatment.",
+    "Lighting": {
+      "GlobalShadows": true,
+      "Brightness": 2,
+      "EnvironmentDiffuseScale": 0.7,
+      "EnvironmentSpecularScale": 0.4
+    },
+    "effects": {
+      "BloomEffect": { "Enabled": true, "Intensity": 0.15, "Size": 18, "Threshold": 1.2 },
+      "SunRaysEffect": { "Enabled": false },
+      "ColorCorrectionEffect": {
+        "Enabled": true,
+        "Brightness": 0,
+        "Contrast": 0.08,
+        "Saturation": 0.08
+      }
+    }
+  },
+  "cinematic": {
+    "description": "Creator-side visual reference; expensive effects may reduce mobile performance.",
+    "Lighting": {
+      "GlobalShadows": true,
+      "Brightness": 2,
+      "EnvironmentDiffuseScale": 1,
+      "EnvironmentSpecularScale": 1
+    },
+    "effects": {
+      "BloomEffect": { "Enabled": true, "Intensity": 0.3, "Size": 24, "Threshold": 1 },
+      "SunRaysEffect": { "Enabled": true, "Intensity": 0.05, "Spread": 0.8 },
+      "ColorCorrectionEffect": {
+        "Enabled": true,
+        "Brightness": 0.02,
+        "Contrast": 0.12,
+        "Saturation": 0.12
+      }
+    }
+  }
+}
