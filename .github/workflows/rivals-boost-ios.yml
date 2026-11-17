@@ -10,6 +10,7 @@ on:
   pull_request:
     paths:
       - "ios/RivalsBoost/**"
+      - "ios/InjectionLab/**"
       - ".github/workflows/rivals-boost-ios.yml"
   workflow_dispatch:
 
@@ -33,6 +34,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rivals-boost-ipad-simulator-app
-          path: ios/RivalsBoost/build/DerivedData/Build/Products/Debug-iphonesimulator/RivalsBoost.app
+          path: "ios/RivalsBoost/build/DerivedData/Build/Products/Debug-iphonesimulator/Rivals Boost.app"
           if-no-files-found: error
           retention-days: 7
