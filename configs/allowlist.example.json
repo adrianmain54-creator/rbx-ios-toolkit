@@ -1,0 +1,4 @@
+{
+  "description": "Populate only with FastFlags verified against the current official Roblox client allowlist. Empty by default.",
+  "allowed_flags": []
+}
