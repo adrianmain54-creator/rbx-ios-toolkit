@@ -1,0 +1,33 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+		A00000000000000000000001 /* AoidFFlagApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000011; };
+		A00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000012; };
+		A00000000000000000000003 /* VisualProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000013; };
+		A00000000000000000000004 /* ProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000014; };
+		A00000000000000000000011 /* AoidFFlagApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AoidFFlagApp.swift; sourceTree = "<group>"; };
+		A00000000000000000000012 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A00000000000000000000013 /* VisualProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualProfile.swift; sourceTree = "<group>"; };
+		A00000000000000000000014 /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
+		A00000000000000000000015 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A00000000000000000000020 = {isa = PBXGroup; children = (A00000000000000000000021, A00000000000000000000022, A00000000000000000000015,); sourceTree = "<group>"; };
+		A00000000000000000000021 /* App */ = {isa = PBXGroup; children = (A00000000000000000000011, A00000000000000000000012,); path = AoidFFlag/App; sourceTree = "<group>"; };
+		A00000000000000000000022 /* Models */ = {isa = PBXGroup; children = (A00000000000000000000013, A00000000000000000000014,); path = AoidFFlag/Models; sourceTree = "<group>"; };
+		A00000000000000000000030 /* AoidFFlag.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AoidFFlag.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000031 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000001, A00000000000000000000002, A00000000000000000000003, A00000000000000000000004,); runOnlyForDeploymentPostprocessing = 0; };
+		A00000000000000000000032 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		A00000000000000000000033 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		A00000000000000000000040 /* AoidFFlag */ = {isa = PBXNativeTarget; buildConfigurationList = A00000000000000000000050; buildPhases = (A00000000000000000000031, A00000000000000000000032, A00000000000000000000033,); buildRules = (); dependencies = (); name = AoidFFlag; productName = AoidFFlag; productReference = A00000000000000000000030; productType = "com.apple.product-type.application"; };
+		A00000000000000000000041 /* Project */ = {isa = PBXProject; attributes = {BuildIndependentTargetsInParallel = 1; LastUpgradeCheck = 1600; }; buildConfigurationList = A00000000000000000000051; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base,); mainGroup = A00000000000000000000020; productRefGroup = A00000000000000000000020; projectDirPath = ""; projectRoot = ""; targets = (A00000000000000000000040,); };
+		A00000000000000000000050 /* Target config list */ = {isa = XCConfigurationList; buildConfigurations = (A00000000000000000000060, A00000000000000000000061,); defaultConfigurationIsVisible = 0; };
+		A00000000000000000000051 /* Project config list */ = {isa = XCConfigurationList; buildConfigurations = (A00000000000000000000062, A00000000000000000000063,); defaultConfigurationIsVisible = 0; };
+		A00000000000000000000060 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = AoidFFlag.xcodeproj/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 16.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.aoid.aoidfflag; PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Debug; };
+		A00000000000000000000061 /* Release */ = {isa = XCConfigurationBuildPhase; buildSettings = {CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = AoidFFlag.xcodeproj/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 16.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.aoid.aoidfflag; PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Release; };
+		A00000000000000000000062 /* Project Debug */ = {isa = XCBuildConfiguration; buildSettings = { }; name = Debug; };
+		A00000000000000000000063 /* Project Release */ = {isa = XCBuildConfiguration; buildSettings = { }; name = Release; };
+	};
+	rootObject = A00000000000000000000041;
+}
