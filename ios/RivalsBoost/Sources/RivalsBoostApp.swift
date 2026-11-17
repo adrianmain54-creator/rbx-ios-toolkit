@@ -186,7 +186,8 @@ struct VisualLabView: View {
         ("Midnight", [Color(red: 0.02, green: 0.06, blue: 0.16), Color(red: 0.08, green: 0.14, blue: 0.28), Color(red: 0.02, green: 0.03, blue: 0.08)])
     ]
     var body: some View {
-        ScreenShell(title: "Visual Lab", subtitle: "Preview original looks and supported content.") {
+        ScreenShell(title: "Visual Lab", subtitle: "Build and tune shader-style looks in the on-device preview studio.") {
+            ShaderStudioCard()
             Panel {
                 Text("Skybox concept").font(.headline)
                 RoundedRectangle(cornerRadius: 18)
