@@ -105,7 +105,7 @@ struct HomeView: View {
                 Circle().fill(BoostStyle.accent.opacity(0.16)).frame(width: 190).offset(x: 205, y: -58)
                 VStack(alignment: .leading, spacing: 10) {
                     Text("PLAY SMARTER").font(.caption.weight(.bold)).tracking(2).foregroundStyle(BoostStyle.accent)
-                    Text("Less lag.\\nMore control.").font(.system(size: 34, weight: .bold, design: .rounded))
+                    Text("Less lag.\nMore control.").font(.system(size: 34, weight: .bold, design: .rounded))
                     Text("Guides and presets for the settings Roblox actually exposes.").font(.subheadline).foregroundStyle(.white.opacity(0.76)).frame(maxWidth: 340, alignment: .leading)
                 }.padding(22)
             }.frame(height: 210)
@@ -205,16 +205,7 @@ struct VisualLabView: View {
                 }.pickerStyle(.segmented)
                 Text("In-app preview only. It cannot replace the skybox in someone else's Roblox experience. Experience creators can publish their own skyboxes in Roblox Studio.").font(.footnote).foregroundStyle(BoostStyle.muted)
             }
-            Panel {
-                Label("Rivals texture pack", systemImage: "square.3.layers.3d").font(.headline)
-                Text("Texture concepts and manifests can be organized here. Applying custom textures to the live Rivals client is not supported by this app.").font(.subheadline).foregroundStyle(BoostStyle.muted)
-                HStack {
-                    Image(systemName: "photo.on.rectangle.angled").foregroundStyle(BoostStyle.accent)
-                    Text("Asset gallery — starter section").font(.subheadline.weight(.medium))
-                    Spacer()
-                    Text("Preview").font(.caption).foregroundStyle(BoostStyle.muted)
-                }.padding(12).background(.white.opacity(0.04), in: RoundedRectangle(cornerRadius: 12))
-            }
+            TexturePackStudioCard()
         }
     }
 }
