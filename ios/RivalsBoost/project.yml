@@ -11,12 +11,18 @@ settings:
     INFOPLIST_KEY_UIUserInterfaceStyle: Dark
     INFOPLIST_KEY_CFBundleDisplayName: Rivals Boost
     GENERATE_INFOPLIST_FILE: YES
+packages:
+  BoostInjectionLab:
+    path: ../InjectionLab
 targets:
   RivalsBoost:
     type: application
     platform: iOS
     sources:
       - path: Sources
+    dependencies:
+      - package: BoostInjectionLab
+        product: BoostProbe
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.adrianmain54.rivalsboost
