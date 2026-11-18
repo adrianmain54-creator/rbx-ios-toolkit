@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import BoostProbe
 
 @main
 struct RivalsBoostApp: App {
@@ -54,6 +55,7 @@ struct RootView: View {
             HomeView(selectedPreset: $selectedPreset).tabItem { Label("Home", systemImage: "square.grid.2x2.fill") }
             PresetsView(selectedPreset: $selectedPreset).tabItem { Label("Presets", systemImage: "slider.horizontal.3") }
             VisualLabView().tabItem { Label("Visual Lab", systemImage: "mountain.2.fill") }
+            ModuleDiagnosticsView().tabItem { Label("Diagnostics", systemImage: "checkmark.shield") }
             DeviceView(selectedGeneration: $selectedGeneration).tabItem { Label("My iPad", systemImage: "ipad") }
         }
         .tint(BoostStyle.accent)
@@ -103,7 +105,7 @@ struct HomeView: View {
                 Circle().fill(BoostStyle.accent.opacity(0.16)).frame(width: 190).offset(x: 205, y: -58)
                 VStack(alignment: .leading, spacing: 10) {
                     Text("PLAY SMARTER").font(.caption.weight(.bold)).tracking(2).foregroundStyle(BoostStyle.accent)
-                    Text("Less lag.\nMore control.").font(.system(size: 34, weight: .bold, design: .rounded))
+                    Text("Less lag.\\nMore control.").font(.system(size: 34, weight: .bold, design: .rounded))
                     Text("Guides and presets for the settings Roblox actually exposes.").font(.subheadline).foregroundStyle(.white.opacity(0.76)).frame(maxWidth: 340, alignment: .leading)
                 }.padding(22)
             }.frame(height: 210)
