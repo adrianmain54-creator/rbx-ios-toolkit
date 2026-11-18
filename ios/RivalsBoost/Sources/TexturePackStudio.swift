@@ -140,7 +140,7 @@ private struct TexturePatternPreview: View {
             .overlay(alignment: .bottomLeading) {
                 VStack(alignment: .leading, spacing: 3) {
                     Text("RBX / VISUAL ASSET").font(.caption2.bold()).tracking(1.8)
-                    Text(style.rawValue.uppercased()).font(.title3.black())
+                    Text(style.rawValue.uppercased()).font(.title3.weight(.black))
                 }
                 .padding(13).foregroundStyle(.white).shadow(color: .black.opacity(0.5), radius: 8)
             }
