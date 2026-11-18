@@ -1,6 +1,6 @@
 # Rivals Boost for iPad
 
-A native SwiftUI companion app for iPad Air players. It provides practical Roblox graphics/performance checklists, selectable guidance presets, a live shader preview studio powered by SwiftUI and Metal, original skybox concept previews, device-generation notes, and a module diagnostics screen.
+A native SwiftUI companion app for iPad Air players. It provides practical Roblox graphics/performance checklists, selectable guidance presets, a live shader preview studio powered by SwiftUI and Metal, original skybox concept previews, a configurable texture-pattern studio with JSON manifest export, device-generation notes, and a module diagnostics screen.
 
 ## Shader Studio
 - Three shader-style looks: Neon, Cinematic, and Crisp.
@@ -10,6 +10,12 @@ A native SwiftUI companion app for iPad Air players. It provides practical Roblo
 - SwiftUI controls and preview scene: `Sources/ShaderStudio.swift`.
 
 The Metal effect is real and runs on the app's preview canvas. It is not injected into Roblox and cannot alter the graphics of Roblox Rivals or another third-party game on iPadOS.
+
+## Texture Pack Studio
+- Four original pattern previews: Tactical Grid, Carbon, Digital, and Clean.
+- Custom pack name, accent palette, and tile-scale controls.
+- Exports a versioned JSON design manifest through the iOS share sheet.
+- Manifest is a design handoff, not a supported Roblox client texture import format.
 
 ## Module diagnostics
 - The app links the local `../InjectionLab` Swift package and its `BoostProbe` dynamic-library product.
