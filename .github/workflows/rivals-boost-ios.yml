@@ -1,0 +1,39 @@
+name: Rivals Boost iOS Build
+
+on:
+  push:
+    branches: [rivals-boost-ipad]
+    paths:
+      - "ios/RivalsBoost/**"
+      - "ios/InjectionLab/**"
+      - ".github/workflows/rivals-boost-ios.yml"
+  pull_request:
+    paths:
+      - "ios/RivalsBoost/**"
+      - "ios/InjectionLab/**"
+      - ".github/workflows/rivals-boost-ios.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test dynamic module lab
+        working-directory: ios/InjectionLab
+        run: swift test
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        working-directory: ios/RivalsBoost
+        run: xcodegen generate
+      - name: Build for iPad simulator
+        working-directory: ios/RivalsBoost
+        run: xcodebuild -project RivalsBoost.xcodeproj -scheme RivalsBoost -destination 'generic/platform=iOS Simulator' -derivedDataPath build/DerivedData CODE_SIGNING_ALLOWED=NO build
+      - name: Upload simulator app
+        uses: actions/upload-artifact@v4
+        with:
+          name: rivals-boost-ipad-simulator-app
+          path: "ios/RivalsBoost/build/DerivedData/Build/Products/Debug-iphonesimulator/Rivals Boost.app"
+          if-no-files-found: error
+          retention-days: 7
