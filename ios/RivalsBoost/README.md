@@ -1,6 +1,6 @@
 # Rivals Boost for iPad
 
-A native SwiftUI companion app for iPad Air players. It provides practical Roblox graphics/performance checklists, selectable guidance presets, a live shader preview studio powered by SwiftUI and Metal, original skybox concept previews, and device-generation notes.
+A native SwiftUI companion app for iPad Air players. It provides practical Roblox graphics/performance checklists, selectable guidance presets, a live shader preview studio powered by SwiftUI and Metal, original skybox concept previews, device-generation notes, and a module diagnostics screen.
 
 ## Shader Studio
 - Three shader-style looks: Neon, Cinematic, and Crisp.
@@ -11,11 +11,18 @@ A native SwiftUI companion app for iPad Air players. It provides practical Roblo
 
 The Metal effect is real and runs on the app's preview canvas. It is not injected into Roblox and cannot alter the graphics of Roblox Rivals or another third-party game on iPadOS.
 
+## Module diagnostics
+- The app links the local `../InjectionLab` Swift package and its `BoostProbe` dynamic-library product.
+- The Diagnostics tab calls `BoostProbe.diagnostics()` and `BoostProbe.selfTest()` from the host app.
+- Xcode/Swift Package Manager handles normal framework linking, embedding, and signing for this app.
+- The module is only loaded by Rivals Boost; it does not attach to or modify other processes.
+
 ## What it does
 - Runs as a standalone iPadOS app.
 - Provides Low Latency, Balanced, and Visual guidance presets.
 - Shows original in-app skybox concept previews.
 - Helps users identify their iPad Air generation.
+- Verifies the app-owned dynamic module through an in-app diagnostics screen.
 - Separates app-side previews from changes an experience creator can make in Roblox Studio.
 
 ## What it does not do
@@ -32,6 +39,8 @@ The Metal effect is real and runs on the app's preview canvas. It is not injecte
 4. Select an iPad simulator or a connected iPad Air.
 5. Set your Apple Developer signing team for device installation.
 6. Build and run.
+
+The XcodeGen project references the local Swift package at `../InjectionLab`, so keep both directories in the repository checkout.
 
 An installable IPA for a physical iPad requires code signing with an Apple development or distribution identity and provisioning profile. The source in this repository is not itself an IPA.
 
